@@ -1,5 +1,7 @@
 package ian.jungmann.ij0292.dto;
 
+import static ian.jungmann.ij0292.util.DateUtils.MMddyyFormatter;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
@@ -28,30 +30,30 @@ public class ToolRentalAgreementResponseDto {
 
     public String toString() {
         return String.format(
-            "Tool code: %s\n" +
-            "Tool type: %s\n" +
-            "Tool brand: %s\n" +
-            "Rental days: %d\n" +
-            "Checkout date: %s\n" +
-            "Due date: %s\n" +
-            "Daily rental charge: $%.2f\n" +
-            "Charge days: %d\n" +
-            "Pre-discount charge: $%.2f\n" +
-            "Discount percent: %d%%\n" +
-            "Discount amount: $%.2f\n" +
-            "Final charge: $%.2f\n",
-            code,
-            type,
-            brand,
-            rentalDays,
-            checkoutDate,
-            dueDate,
-            dailyRentalCharge,
-            chargeDays,
-            preDiscountCharge,
-            discountPercent,
-            discountAmount,
-            finalCharge
-        );
+                "Tool code: %s\n" +
+                "Tool type: %s\n" +
+                "Tool brand: %s\n" +
+                "Rental days: %d\n" +
+                "Checkout date: %s\n" +
+                "Due date: %s\n" +
+                "Daily rental charge: $%.2f\n" +
+                "Charge days: %d\n" +
+                "Pre-discount charge: $%.2f\n" +
+                "Discount percent: %d%%\n" +
+                "Discount amount: $%.2f\n" +
+                "Final charge: $%.2f\n",
+                code,
+                type,
+                brand,
+                rentalDays,
+                MMddyyFormatter.format(checkoutDate),
+                MMddyyFormatter.format(dueDate),
+                dailyRentalCharge,
+                chargeDays,
+                preDiscountCharge,
+                discountPercent,
+                discountAmount,
+                finalCharge
+            );
     }
 }

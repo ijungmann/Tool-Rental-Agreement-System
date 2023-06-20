@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @AllArgsConstructor
@@ -34,9 +35,10 @@ public class ToolRentalAgreementController {
                 "; ");
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity handleException(EntityNotFoundException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity handleException(ResponseStatusException e) {
+        return new ResponseEntity<>(e.getReason(), HttpStatus.BAD_REQUEST);
     }
     @PostMapping("tools/rentalAgreements")
     public ToolRentalAgreementResponseDto createToolRentalAgreement(

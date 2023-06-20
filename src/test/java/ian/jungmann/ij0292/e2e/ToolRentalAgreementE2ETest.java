@@ -1,4 +1,4 @@
-package ian.jungmann.ij0292.controller;
+package ian.jungmann.ij0292.e2e;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -10,10 +10,12 @@ import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.context.jdbc.SqlConfig.TransactionMode.ISOLATED;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.AssertTrue;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -26,6 +28,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
+import org.springframework.web.server.ResponseStatusException;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -75,7 +78,7 @@ class ToolRentalAgreementE2ETest {
     }
 
     @Test
-    void createRentalAgreement__LAWD() {
+    void createRentalAgreement__LADW() {
         ToolRentalAgreementRequestDto requestDto = buildRequestDto()
                 .toolCode("LADW")
                 .checkoutDate(LocalDate.of(2020, 7, 2))
@@ -255,7 +258,7 @@ class ToolRentalAgreementE2ETest {
         ToolRentalAgreementRequestDto requestDto = buildRequestDto()
                 .toolCode("JAKR")
                 .checkoutDate(LocalDate.of(2015, 9, 3))
-                .rentalDays(-1)
+                .rentalDays(0)
                 .discountPercent(1)
                 .build();
         ResponseEntity<String> response = restTemplate.postForEntity(
@@ -266,6 +269,51 @@ class ToolRentalAgreementE2ETest {
     }
 
     @Test
+    void createRentalAgreement__JAKR__CheckoutDateNull() {
+        ToolRentalAgreementRequestDto requestDto = buildRequestDto()
+                .toolCode("JAKR")
+                .checkoutDate(null)
+                .rentalDays(2)
+                .discountPercent(1)
+                .build();
+        ResponseEntity<String> response = restTemplate.postForEntity(
+                getUrl(), requestDto, String.class);
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusCodeValue());
+        String body = response.getBody();
+        assertEquals( "Checkout date must not be null", body);
+    }
+
+    @Test
+    void createRentalAgreement__JAKR__ToolCodeNull() {
+        ToolRentalAgreementRequestDto requestDto = buildRequestDto()
+                .toolCode(null)
+                .checkoutDate(LocalDate.now())
+                .rentalDays(2)
+                .discountPercent(1)
+                .build();
+        ResponseEntity<String> response = restTemplate.postForEntity(
+                getUrl(), requestDto, String.class);
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusCodeValue());
+        String body = response.getBody();
+        assertEquals( "Tool code must not be blank", body);
+    }
+
+    @Test
+    void createRentalAgreement__JAKR__ToolCodeBlank() {
+        ToolRentalAgreementRequestDto requestDto = buildRequestDto()
+                .toolCode("")
+                .checkoutDate(LocalDate.now())
+                .rentalDays(2)
+                .discountPercent(1)
+                .build();
+        ResponseEntity<String> response = restTemplate.postForEntity(
+                getUrl(), requestDto, String.class);
+        assertEquals(HttpStatus.SC_BAD_REQUEST, response.getStatusCodeValue());
+        String body = response.getBody();
+        assertEquals( "Tool code must not be blank", body);
+    }
+
+    @Test
     void createRentalAgreement__InvalidType() {
         ToolRentalAgreementRequestDto requestDto = buildRequestDto()
                 .toolCode("Fake")
@@ -273,11 +321,11 @@ class ToolRentalAgreementE2ETest {
                 .rentalDays(4)
                 .discountPercent(50)
                 .build();
+
         ResponseEntity<String> response = restTemplate.postForEntity(
-                getUrl(), requestDto,
-                String.class);
-        assertEquals(HttpStatus.SC_NOT_FOUND, response.getStatusCodeValue());
-        assertEquals("Unable to find ian.jungmann.ij0292.entity.ToolEntity with id Fake", response.getBody());
+                getUrl(), requestDto, String.class);
+        assertTrue(response.getStatusCode().is4xxClientError());
+        assertEquals("Tool with code Fake not found", response.getBody());
     }
 
     private ToolRentalAgreementRequestDto.Builder buildRequestDto() {

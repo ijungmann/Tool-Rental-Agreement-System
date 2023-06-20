@@ -32,7 +32,7 @@ public class ToolRentalAgreementService {
             DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
 
     public ToolRentalAgreementResponseDto createToolRentalAgreement(ToolRentalAgreementRequestDto requestDto) {
-        ToolEntity toolEntity = toolService.getToolReference(requestDto.getToolCode());
+        ToolEntity toolEntity = toolService.getToolEntity(requestDto.getToolCode());
 
         LocalDate requestDate = requestDto.getCheckoutDate();
         LocalDate returnDate = requestDto.getCheckoutDate().plusDays(requestDto.getRentalDays());
@@ -66,17 +66,17 @@ public class ToolRentalAgreementService {
         return mapper.mapEntityToResponse(entity);
     }
 
-    protected static BigDecimal calculateFinalCost(BigDecimal initialCost, BigDecimal discountAmount) {
+    private static BigDecimal calculateFinalCost(BigDecimal initialCost, BigDecimal discountAmount) {
         return BigDecimal.valueOf(initialCost.doubleValue() - discountAmount.doubleValue())
                 .setScale(2, RoundingMode.HALF_UP);
     }
 
-    protected static BigDecimal calculateDiscountAmount(ToolRentalAgreementRequestDto requestDto, BigDecimal initialCost) {
+    private static BigDecimal calculateDiscountAmount(ToolRentalAgreementRequestDto requestDto, BigDecimal initialCost) {
         return BigDecimal.valueOf(initialCost.doubleValue() * (requestDto.getDiscountPercent() / 100.0))
                 .setScale(2, RoundingMode.HALF_UP);
     }
 
-    protected static BigDecimal calculateInitialCost(ToolEntity toolEntity, AtomicInteger daysChargedAtomic) {
+    private static BigDecimal calculateInitialCost(ToolEntity toolEntity, AtomicInteger daysChargedAtomic) {
         return BigDecimal.valueOf(daysChargedAtomic.get() * toolEntity.getType().getDailyCharge().doubleValue())
                 .setScale(2, RoundingMode.HALF_UP);
     }
