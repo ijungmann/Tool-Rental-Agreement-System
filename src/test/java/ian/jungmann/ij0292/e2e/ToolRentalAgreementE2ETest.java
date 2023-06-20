@@ -7,15 +7,10 @@ import ian.jungmann.ij0292.dto.ToolRentalAgreementRequestDto;
 import ian.jungmann.ij0292.dto.ToolRentalAgreementResponseDto;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.springframework.test.context.jdbc.SqlConfig.TransactionMode.ISOLATED;
 
-import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.AssertTrue;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import javax.sql.DataSource;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -26,9 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.web.server.ResponseStatusException;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -43,9 +35,6 @@ class ToolRentalAgreementE2ETest {
 
     @Autowired
     private TestRestTemplate restTemplate;
-
-    @Autowired
-    private DataSource dataSource;
 
     @Container
     @ServiceConnection
@@ -353,6 +342,6 @@ class ToolRentalAgreementE2ETest {
     }
 
     private String getUrl() {
-        return "http://localhost:" + port + "/tools/rentalAgreements";
+        return "http://localhost:" + port + "/tools/rental-agreements";
     }
 }

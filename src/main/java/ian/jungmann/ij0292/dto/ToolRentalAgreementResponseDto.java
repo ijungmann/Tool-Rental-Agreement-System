@@ -1,6 +1,7 @@
 package ian.jungmann.ij0292.dto;
 
 import static ian.jungmann.ij0292.util.DateUtils.MMddyyFormatter;
+import static ian.jungmann.ij0292.util.DateUtils.formatDateAsMMddyy;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,6 +29,7 @@ public class ToolRentalAgreementResponseDto {
     private BigDecimal discountAmount;
     private BigDecimal finalCharge;
 
+    // As specified in requirements
     public String toString() {
         return String.format(
                 "Tool code: %s\n" +
@@ -46,8 +48,8 @@ public class ToolRentalAgreementResponseDto {
                 type,
                 brand,
                 rentalDays,
-                MMddyyFormatter.format(checkoutDate),
-                MMddyyFormatter.format(dueDate),
+                formatDateAsMMddyy(checkoutDate),
+                formatDateAsMMddyy(dueDate),
                 dailyRentalCharge,
                 chargeDays,
                 preDiscountCharge,

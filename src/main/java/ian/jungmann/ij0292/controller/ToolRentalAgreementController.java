@@ -25,6 +25,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class ToolRentalAgreementController {
     private final ToolRentalAgreementService toolRentalAgreementService;
 
+    // Handle ResponseStatusExceptions by building a message from the errors and wrapping them in a ResponseEntity
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity handleException(MethodArgumentNotValidException e) {
         String message = StringUtils.join(
@@ -36,14 +37,18 @@ public class ToolRentalAgreementController {
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
+    // Handle ResponseStatusExceptions by wrapping them in a ResponseEntity
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity handleException(ResponseStatusException e) {
         return new ResponseEntity<>(e.getReason(), HttpStatus.BAD_REQUEST);
     }
-    @PostMapping("tools/rentalAgreements")
+
+    /**
+     * POST to create a new tool rental agreement.
+     */
+    @PostMapping("tools/rental-agreements")
     public ToolRentalAgreementResponseDto createToolRentalAgreement(
             @Valid @RequestBody ToolRentalAgreementRequestDto toolRentalAgreementRequestDto) {
         return toolRentalAgreementService.createToolRentalAgreement(toolRentalAgreementRequestDto);
     }
-
 }

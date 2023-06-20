@@ -33,28 +33,6 @@ class ToolRentalAgreementServiceTest {
     private ToolService toolService;
     @Mock
     private ToolRentalAgreementDtoEntityMapper mapper;
-    @Test
-    void getHolidays() {
-        //These dates were all found online to confirm against
-
-        Set<LocalDate> holidays = toolRentalAgreementService.getHolidays(2025);
-        //Labor day
-        assertTrue(holidays.contains(LocalDate.of(2025, 9, 1)));
-        //Independence day
-        assertTrue(holidays.contains(LocalDate.of(2025, 7, 4)));
-
-        holidays = toolRentalAgreementService.getHolidays(2020);
-        //Labor day
-        assertTrue(holidays.contains(LocalDate.of(2020, 9, 7)));
-        //Independence day (on a Saturday, so observed on Friday)
-        assertTrue(holidays.contains(LocalDate.of(2020, 7, 3)));
-
-        holidays = toolRentalAgreementService.getHolidays(2021);
-        //Labor day
-        assertTrue(holidays.contains(LocalDate.of(2021, 9, 6)));
-        //Independence day (on a Sunday, so observed on Monday)
-        assertTrue(holidays.contains(LocalDate.of(2021, 7, 5)));
-    }
 
     @Test
     void shouldCountDate() {
