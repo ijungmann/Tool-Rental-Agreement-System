@@ -74,3 +74,5 @@ scope of this project.
 * Add comments to flyway, sql files, etc.
 * Configure the application to run outside of tests.
 * Containerize the application.
+* Add a CI/CD pipeline.
+* Add branch protections, do proper PRs, etc.
