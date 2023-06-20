@@ -1,0 +1,11 @@
+spring:
+  jpa:
+    hibernate:
+      ddlAuto: none
+    database: mysql
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+flyway:
+  schemas: tool_db
+  user: "root"
+  password: "root"
